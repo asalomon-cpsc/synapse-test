@@ -201,8 +201,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get_File_List",
-						"type": "GetMetadata",
+						"name": "Run_PySpark_Notebook",
+						"type": "SynapseNotebook",
 						"dependsOn": [],
 						"policy": {
 							"retry": 0,
@@ -212,129 +212,37 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"dataset": {
-								"referenceName": "csvtosql",
-								"type": "DatasetReference",
-								"parameters": {}
+							"notebook": {
+								"referenceName": "csvToSqlPySparkNotebook",
+								"type": "NotebookReference"
 							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
+							"sparkPool": {
+								"referenceName": "SampleSpark",
+								"type": "BigDataPoolReference"
 							},
-							"formatSettings": {
-								"type": "DelimitedTextReadSettings"
-							}
-						}
-					},
-					{
-						"name": "Filter_CSV_Files",
-						"type": "Filter",
-						"dependsOn": [
-							{
-								"activity": "Get_File_List",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get_File_List').output.childItems",
-								"type": "Expression"
+							"executorSize": "Small",
+							"conf": {
+								"spark.dynamicAllocation.enabled": true
 							},
-							"condition": {
-								"value": "@endswith(item().name, '.csv')",
-								"type": "Expression"
+							"driverSize": "Small",
+							"authentication": {
+								"type": "MSI"
 							}
-						}
-					},
-					{
-						"name": "ForEach_File",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Filter_CSV_Files",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Filter_CSV_Files').output.Value",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Run_PySpark_Notebook",
-									"type": "SynapseNotebook",
-									"dependsOn": [],
-									"policy": {
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"notebook": {
-											"referenceName": "csvToSqlPySparkNotebook",
-											"type": "NotebookReference"
-										},
-										"parameters": {
-											"fileName": {
-												"value": {
-													"value": "@item().name",
-													"type": "Expression"
-												},
-												"type": "Expression"
-											},
-											"stateName": {
-												"value": {
-													"value": "@split(item().name,'-')[0]",
-													"type": "Expression"
-												},
-												"type": "Expression"
-											},
-											"fileDate": {
-												"value": {
-													"value": "@split(split(item().name,'-')[1],'.')[0]",
-													"type": "Expression"
-												},
-												"type": "Expression"
-											}
-										},
-										"sparkPool": {
-											"referenceName": "SampleSpark",
-											"type": "BigDataPoolReference"
-										},
-										"executorSize": "Small",
-										"conf": {
-											"spark.dynamicAllocation.enabled": true
-										},
-										"driverSize": "Small",
-										"authentication": {
-											"type": "MSI"
-										}
-									}
-								}
-							]
 						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"parameters": {
+					"csvtest": {
+						"type": "String",
+						"defaultValue": "Florida-101012025.csv"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/csvtosql')]",
 				"[concat(variables('workspaceId'), '/notebooks/csvToSqlPySparkNotebook')]",
 				"[concat(variables('workspaceId'), '/bigDataPools/SampleSpark')]"
 			]
@@ -452,7 +360,6 @@
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
-					"firstRowAsHeader": true,
 					"quoteChar": "\""
 				},
 				"schema": []
@@ -700,7 +607,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "f296e0a9-31b2-4cb6-82a6-587ec999783a"
+						"spark.autotune.trackingId": "cce5cc3e-4075-431c-81e5-218ee0b3126d"
 					}
 				},
 				"metadata": {
@@ -725,13 +632,15 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"import os\n",
 							"# === Parameters from pipeline ===\n",
@@ -745,9 +654,8 @@
 							"# --------------------------\n",
 							"# Python notebook code\n",
 							"file_name  = globals().get(\"fileName\")\n",
-							"state_name = globals().get(\"stateName\")\n",
-							"file_date  = globals().get(\"fileDate\")\n",
-							"\n",
+							"state_name = \"FL\"\n",
+							"file_date  = current_timestamp()\n",
 							"print(f\"File: {file_name}, State: {state_name}, Date: {file_date}\")\n",
 							"\n",
 							"\n",
