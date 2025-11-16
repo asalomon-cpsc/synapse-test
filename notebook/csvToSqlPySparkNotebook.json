@@ -13,11 +13,12 @@
 			"executorMemory": "56g",
 			"executorCores": 8,
 			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": true,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1ee401b3-7b9c-4385-af9a-3ddd72fd9d0f"
+				"spark.autotune.trackingId": "233200e6-c950-41c1-b10c-39583fd4c8fa"
 			}
 		},
 		"metadata": {
@@ -60,8 +61,6 @@
 					"\n",
 					"\n",
 					"jdbc_url     = os.environ.get(\"SQL_JDBC_URL\")\n",
-					"jdbc_user    = os.environ.get(\"SQL_USER\")\n",
-					"jdbc_pass    = os.environ.get(\"SQL_PASS\")\n",
 					"target_table = os.environ.get(\"SQL_TABLE\")\n",
 					"# === ADLS configuration ===\n",
 					"container = \"synapse1\"\n",
