@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b9677146-7220-4c6c-bb1c-c160584a7612"
+				"spark.autotune.trackingId": "6ae4687a-c270-4972-b8d7-9bb5893d43b0"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					"# Python notebook code\n",
 					"file_name  = globals().get(\"fileName\")\n",
 					"state_name = \"FL\"\n",
-					"file_date  = current_timestamp()\n",
+					"file_date  = \"20251010\"\n",
 					"print(f\"File: {file_name}, State: {state_name}, Date: {file_date}\")\n",
 					"\n",
 					"\n",
