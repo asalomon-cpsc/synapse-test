@@ -607,7 +607,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6ae4687a-c270-4972-b8d7-9bb5893d43b0"
+						"spark.autotune.trackingId": "52b8f3ce-f8cb-43c1-896d-62640ac7e1cd"
 					}
 				},
 				"metadata": {
@@ -632,13 +632,15 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56
+						"memory": 56,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"import os\n",
 							"# === Parameters from pipeline ===\n",
@@ -651,7 +653,7 @@
 							"# Manual defaults for testing\n",
 							"# --------------------------\n",
 							"# Python notebook code\n",
-							"file_name  = globals().get(\"fileName\")\n",
+							"file_name  = \"Florida-10102025.csv\"\n",
 							"state_name = \"FL\"\n",
 							"file_date  = \"20251010\"\n",
 							"print(f\"File: {file_name}, State: {state_name}, Date: {file_date}\")\n",
