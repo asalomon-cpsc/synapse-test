@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "alex-analytics1"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureSearch1_key": {
+			"value": ""
+		},
+		"AzureTableStorage1_connectionString": {
+			"value": ""
+		},
+		"alex-analytics1-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:alex-analytics1.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureSearch1_properties_typeProperties_url": {
+			"value": "https://cpsc-recalls-ai-search.search.windows.net"
+		},
+		"alex-analytics1-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://alexanalytics1.dfs.core.windows.net"
+		},
+		"Trigger_9wq_properties_CopyStatusToParquet_parameters_windowStart": {
+			"value": "@trigger().scheduledTime"
+		}
+	}
+}
