@@ -3,73 +3,42 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "ForEach_File",
-				"type": "ForEach",
+				"name": "Run_PySpark_Notebook",
+				"type": "SynapseNotebook",
 				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "[object Object]",
-						"type": "Expression"
+					"notebook": {
+						"referenceName": "csvToSqlPySparkNotebook",
+						"type": "NotebookReference"
 					},
-					"activities": [
-						{
-							"name": "Run_PySpark_Notebook",
-							"type": "SynapseNotebook",
-							"dependsOn": [],
-							"policy": {
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"notebook": {
-									"referenceName": "csvToSqlPySparkNotebook",
-									"type": "NotebookReference"
-								},
-								"parameters": {
-									"fileName": {
-										"value": {
-											"value": "@item().name",
-											"type": "Expression"
-										},
-										"type": "Expression"
-									},
-									"stateName": {
-										"value": {
-											"value": "@split(item().name,'-')[0]",
-											"type": "Expression"
-										},
-										"type": "Expression"
-									},
-									"fileDate": {
-										"value": {
-											"value": "@split(split(item().name,'-')[1],'.')[0]",
-											"type": "Expression"
-										},
-										"type": "Expression"
-									}
-								},
-								"sparkPool": {
-									"referenceName": "SampleSpark",
-									"type": "BigDataPoolReference"
-								},
-								"executorSize": "Small",
-								"conf": {
-									"spark.dynamicAllocation.enabled": true
-								},
-								"driverSize": "Small",
-								"authentication": {
-									"type": "MSI"
-								}
-							}
-						}
-					]
+					"sparkPool": {
+						"referenceName": "SampleSpark",
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": "Small",
+					"conf": {
+						"spark.dynamicAllocation.enabled": true
+					},
+					"driverSize": "Small",
+					"authentication": {
+						"type": "MSI"
+					}
 				}
 			}
 		],
+		"parameters": {
+			"csvtest": {
+				"type": "String",
+				"defaultValue": "Florida-101012025.csv"
+			}
+		},
 		"annotations": []
 	}
 }
