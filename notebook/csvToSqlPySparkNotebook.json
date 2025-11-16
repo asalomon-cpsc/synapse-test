@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a9fdee18-2241-4175-a4a1-03d0d17cbcd2"
+				"spark.autotune.trackingId": "f296e0a9-31b2-4cb6-82a6-587ec999783a"
 			}
 		},
 		"metadata": {
@@ -70,9 +70,9 @@
 					"print(f\"File: {file_name}, State: {state_name}, Date: {file_date}\")\n",
 					"\n",
 					"\n",
-					"\n",
-					"\n",
-					"\n",
+					"if file_name is None:\n",
+					"    print(f\"invalid file name or path\")\n",
+					"    raise ValueError(\"Parameter 'file_name' is required.\")\n",
 					"\n",
 					"# Optional for JDBC URL if using environment variables or pipeline\n",
 					"# dbutils.widgets.text(\"jdbcUrl\", \"\")\n",
@@ -136,7 +136,7 @@
 					"print(f\"Moved file to archive: {archive_path}\")\n",
 					""
 				],
-				"execution_count": 10
+				"execution_count": 14
 			}
 		]
 	}
