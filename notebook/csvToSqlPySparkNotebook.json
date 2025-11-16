@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "233200e6-c950-41c1-b10c-39583fd4c8fa"
+				"spark.autotune.trackingId": "ebd7c807-c38f-4d3d-8948-46892d5971c5"
 			}
 		},
 		"metadata": {
@@ -60,8 +60,8 @@
 					"#targetDB\n",
 					"\n",
 					"\n",
-					"jdbc_url     = os.environ.get(\"SQL_JDBC_URL\")\n",
-					"target_table = os.environ.get(\"SQL_TABLE\")\n",
+					"#jdbc_url     = os.environ.get(\"SQL_JDBC_URL\")\n",
+					"#target_table = os.environ.get(\"SQL_TABLE\")\n",
 					"# === ADLS configuration ===\n",
 					"container = \"synapse1\"\n",
 					"account = \"alexanalytics1\"  # without .dfs.core.windows.net\n",
