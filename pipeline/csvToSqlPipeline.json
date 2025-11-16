@@ -9,7 +9,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "Florida-101012025.csv",
+						"value": "[object Object]",
 						"type": "Expression"
 					},
 					"activities": [
