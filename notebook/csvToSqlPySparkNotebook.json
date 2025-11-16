@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ebd7c807-c38f-4d3d-8948-46892d5971c5"
+				"spark.autotune.trackingId": "a9fdee18-2241-4175-a4a1-03d0d17cbcd2"
 			}
 		},
 		"metadata": {
@@ -26,7 +26,7 @@
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
-				"display_name": "python"
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "python"
@@ -54,9 +54,30 @@
 				"source": [
 					"import os\n",
 					"# === Parameters from pipeline ===\n",
-					"file_name = mssparkutils.notebookParams.get(\"fileName\")\n",
-					"state_name = mssparkutils.notebookParams.get(\"stateName\")\n",
-					"file_date = mssparkutils.notebookParams.get(\"fileDate\")\n",
+					"from pyspark.sql import SparkSession\n",
+					"\n",
+					"from notebookutils import mssparkutils\n",
+					"\n",
+					"\n",
+					"# --------------------------\n",
+					"# Manual defaults for testing\n",
+					"# --------------------------\n",
+					"# Python notebook code\n",
+					"file_name  = globals().get(\"fileName\")\n",
+					"state_name = globals().get(\"stateName\")\n",
+					"file_date  = globals().get(\"fileDate\")\n",
+					"\n",
+					"print(f\"File: {file_name}, State: {state_name}, Date: {file_date}\")\n",
+					"\n",
+					"\n",
+					"\n",
+					"\n",
+					"\n",
+					"\n",
+					"# Optional for JDBC URL if using environment variables or pipeline\n",
+					"# dbutils.widgets.text(\"jdbcUrl\", \"\")\n",
+					"# dbutils.widgets.text(\"targetTable\", \"\")\n",
+					"\n",
 					"#targetDB\n",
 					"\n",
 					"\n",
@@ -75,6 +96,8 @@
 					"      .option(\"quote\", '\"')\n",
 					"      .option(\"escape\", '\\\\')\n",
 					"      .csv(file_path))\n",
+					"print(\"Read CSV File\")\n",
+					"df.show()\n",
 					"\n",
 					"# === Add metadata columns ===\n",
 					"from pyspark.sql.functions import lit, current_timestamp, trim\n",
@@ -93,12 +116,11 @@
 					"\n",
 					"# === Write to SQL Server efficiently ===\n",
 					"(df.write\n",
-					"   .format(\"com.microsoft.sqlserver.jdbc.spark\")\n",
+					"   .format(\"jdbc\")\n",
 					"   .mode(\"append\")\n",
 					"   .option(\"url\", jdbc_url)\n",
 					"   .option(\"dbtable\", target_table)\n",
 					"   .option(\"batchsize\", 5000)\n",
-					"   .option(\"reliabilitylevel\", \"BEST_EFFORT\")\n",
 					"   .save())\n",
 					"\n",
 					"print(f\"Data successfully written to {target_table}\")\n",
@@ -114,7 +136,7 @@
 					"print(f\"Moved file to archive: {archive_path}\")\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 10
 			}
 		]
 	}
