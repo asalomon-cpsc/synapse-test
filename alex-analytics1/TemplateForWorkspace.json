@@ -700,7 +700,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "6b54b08c-4a19-4a00-8b8f-683b3b92d3c6"
+						"spark.autotune.trackingId": "f296e0a9-31b2-4cb6-82a6-587ec999783a"
 					}
 				},
 				"metadata": {
@@ -725,15 +725,13 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 3,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"import os\n",
 							"# === Parameters from pipeline ===\n",
