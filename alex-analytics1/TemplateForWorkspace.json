@@ -195,6 +195,151 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/csvToSqlPipeline')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get_File_List",
+						"type": "GetMetadata",
+						"dependsOn": [],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "csvtosql",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"fieldList": [
+								"childItems"
+							],
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							},
+							"formatSettings": {
+								"type": "DelimitedTextReadSettings"
+							}
+						}
+					},
+					{
+						"name": "Filter_CSV_Files",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get_File_List",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get_File_List').output.childItems",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@endswith(item().name, '.csv')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ForEach_File",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter_CSV_Files",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter_CSV_Files').output.Value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Run_PySpark_Notebook",
+									"type": "SynapseNotebook",
+									"dependsOn": [],
+									"policy": {
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebook": {
+											"referenceName": "csvToSqlPySparkNotebook",
+											"type": "NotebookReference"
+										},
+										"parameters": {
+											"fileName": {
+												"value": {
+													"value": "@item().name",
+													"type": "Expression"
+												},
+												"type": "Expression"
+											},
+											"stateName": {
+												"value": {
+													"value": "@split(item().name,'-')[0]",
+													"type": "Expression"
+												},
+												"type": "Expression"
+											},
+											"fileDate": {
+												"value": {
+													"value": "@split(split(item().name,'-')[1],'.')[0]",
+													"type": "Expression"
+												},
+												"type": "Expression"
+											}
+										},
+										"sparkPool": {
+											"referenceName": "SampleSpark",
+											"type": "BigDataPoolReference"
+										},
+										"executorSize": "Small",
+										"conf": {
+											"spark.dynamicAllocation.enabled": true
+										},
+										"driverSize": "Small",
+										"authentication": {
+											"type": "MSI"
+										}
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/csvtosql')]",
+				"[concat(variables('workspaceId'), '/notebooks/csvToSqlPySparkNotebook')]",
+				"[concat(variables('workspaceId'), '/bigDataPools/SampleSpark')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_9wq')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -302,7 +447,6 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "*-*.csv",
 						"folderPath": "synapse/workspaces/alex-analytics1",
 						"fileSystem": "synapse1"
 					},
@@ -531,6 +675,154 @@
 			"properties": {
 				"type": "ManagedIdentity",
 				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/csvToSqlPySparkNotebook')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "SampleSpark",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 2,
+					"runAsWorkspaceSystemIdentity": true,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "6b54b08c-4a19-4a00-8b8f-683b3b92d3c6"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/75bad4c0-165f-4c86-971d-364c6e6ce1dd/resourceGroups/rg-analytics-dev/providers/Microsoft.Synapse/workspaces/alex-analytics1/bigDataPools/SampleSpark",
+						"name": "SampleSpark",
+						"type": "Spark",
+						"endpoint": "https://alex-analytics1.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SampleSpark",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.4",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"import os\n",
+							"# === Parameters from pipeline ===\n",
+							"from pyspark.sql import SparkSession\n",
+							"\n",
+							"from notebookutils import mssparkutils\n",
+							"\n",
+							"\n",
+							"# --------------------------\n",
+							"# Manual defaults for testing\n",
+							"# --------------------------\n",
+							"# Python notebook code\n",
+							"file_name  = globals().get(\"fileName\")\n",
+							"state_name = globals().get(\"stateName\")\n",
+							"file_date  = globals().get(\"fileDate\")\n",
+							"\n",
+							"print(f\"File: {file_name}, State: {state_name}, Date: {file_date}\")\n",
+							"\n",
+							"\n",
+							"if file_name is None:\n",
+							"    print(f\"invalid file name or path\")\n",
+							"    raise ValueError(\"Parameter 'file_name' is required.\")\n",
+							"\n",
+							"# Optional for JDBC URL if using environment variables or pipeline\n",
+							"# dbutils.widgets.text(\"jdbcUrl\", \"\")\n",
+							"# dbutils.widgets.text(\"targetTable\", \"\")\n",
+							"\n",
+							"#targetDB\n",
+							"\n",
+							"\n",
+							"#jdbc_url     = os.environ.get(\"SQL_JDBC_URL\")\n",
+							"#target_table = os.environ.get(\"SQL_TABLE\")\n",
+							"# === ADLS configuration ===\n",
+							"container = \"synapse1\"\n",
+							"account = \"alexanalytics1\"  # without .dfs.core.windows.net\n",
+							"folder = \"synapse/workspaces/alex-analytics1\"\n",
+							"file_path = f\"abfss://{container}@{account}.dfs.core.windows.net/{folder}/{file_name}\"\n",
+							"\n",
+							"# === Read CSV with schema inferred ===\n",
+							"df = (spark.read\n",
+							"      .option(\"header\", \"true\")\n",
+							"      .option(\"inferSchema\", \"true\")\n",
+							"      .option(\"quote\", '\"')\n",
+							"      .option(\"escape\", '\\\\')\n",
+							"      .csv(file_path))\n",
+							"print(\"Read CSV File\")\n",
+							"df.show()\n",
+							"\n",
+							"# === Add metadata columns ===\n",
+							"from pyspark.sql.functions import lit, current_timestamp, trim\n",
+							"df = (df\n",
+							"      .withColumn(\"SourceState\", lit(state_name))\n",
+							"      .withColumn(\"SourceFileDate\", lit(file_date))\n",
+							"      .withColumn(\"IngestionTimestamp\", current_timestamp()))\n",
+							"\n",
+							"# === Simple transformation: trim all string columns ===\n",
+							"for col in df.columns:\n",
+							"    df = df.withColumn(col, trim(df[col]))\n",
+							"\n",
+							"# === SQL Server connection ===\n",
+							"jdbc_url = \"jdbc:sqlserver://dths-test-sqlserver.database.windows.net:1433;databaseName=dths;encrypt=true;trustServerCertificate=false;authentication=ActiveDirectoryMsi\"\n",
+							"target_table = \"dbo.batches\"\n",
+							"\n",
+							"# === Write to SQL Server efficiently ===\n",
+							"(df.write\n",
+							"   .format(\"jdbc\")\n",
+							"   .mode(\"append\")\n",
+							"   .option(\"url\", jdbc_url)\n",
+							"   .option(\"dbtable\", target_table)\n",
+							"   .option(\"batchsize\", 5000)\n",
+							"   .save())\n",
+							"\n",
+							"print(f\"Data successfully written to {target_table}\")\n",
+							"\n",
+							"# === Archive processed file ===\n",
+							"source_path = f\"{folder}/{file_name}\"\n",
+							"archive_path = f\"{folder}/archive/{file_name}\"\n",
+							"mssparkutils.fs.mkdirs(f\"abfss://{container}@{account}.dfs.core.windows.net/{folder}/archive\")\n",
+							"mssparkutils.fs.mv(\n",
+							"    f\"abfss://{container}@{account}.dfs.core.windows.net/{source_path}\",\n",
+							"    f\"abfss://{container}@{account}.dfs.core.windows.net/{archive_path}\"\n",
+							")\n",
+							"print(f\"Moved file to archive: {archive_path}\")\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 14
+					}
+				]
 			},
 			"dependsOn": []
 		},
