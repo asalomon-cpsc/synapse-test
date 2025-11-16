@@ -1,0 +1,102 @@
+{
+	"name": "csvToSqlPipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get_File_List",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "csvtosql",
+						"type": "DatasetReference"
+					},
+					"fieldList": [],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "If_Files_Exist",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Get_File_List",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(length(activity('Get_File_List').output.childItems),0)",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "ForEach_File",
+							"type": "ForEach",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"items": {
+									"value": "@activity('Get_File_List').output.childItems",
+									"type": "Expression"
+								},
+								"activities": [
+									{
+										"name": "Run_PySpark_Notebook",
+										"type": "SynapseNotebook",
+										"dependsOn": [],
+										"policy": {
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"notebook": {
+												"referenceName": "csvToSqlPySparkNotebook",
+												"type": "NotebookReference"
+											},
+											"sparkPool": {
+												"referenceName": "SampleSpark",
+												"type": "BigDataPoolReference"
+											},
+											"executorSize": "Small",
+											"conf": {
+												"spark.dynamicAllocation.enabled": true,
+												"spark.dynamicAllocation.minExecutors": null,
+												"spark.dynamicAllocation.maxExecutors": null
+											},
+											"driverSize": "Small",
+											"numExecutors": null,
+											"authentication": {
+												"type": "MSI"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": []
+	}
+}
