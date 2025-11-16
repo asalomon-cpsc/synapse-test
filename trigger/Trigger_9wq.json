@@ -1,0 +1,28 @@
+{
+	"name": "Trigger_9wq",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "CopyStatusToParquet",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"windowStart": "@trigger().scheduledTime"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 24,
+				"startTime": "2025-07-29T16:33:00Z",
+				"endTime": "2025-08-31T16:33:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

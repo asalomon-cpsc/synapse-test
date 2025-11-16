@@ -1,0 +1,16 @@
+{
+	"name": "DestinationDataset_o7g",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSearch1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSearchIndex",
+		"schema": [],
+		"typeProperties": {
+			"indexName": "cpsc-recalls-10102024"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
