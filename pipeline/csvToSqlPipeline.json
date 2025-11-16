@@ -18,19 +18,19 @@
 						"referenceName": "csvtosql",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
 					}
 				}
 			},
 			{
-				"name": "If_Files_Exist",
-				"type": "IfCondition",
+				"name": "Filter_CSV_Files",
+				"type": "Filter",
 				"dependsOn": [
 					{
 						"activity": "Get_File_List",
@@ -41,56 +41,85 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"expression": {
-						"value": "@greater(length(activity('Get_File_List').output.childItems),0)",
+					"items": {
+						"value": "@activity('Get_File_List').output.childItems",
 						"type": "Expression"
 					},
-					"ifTrueActivities": [
+					"condition": {
+						"value": "@endswith(item().name, '.csv')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach_File",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter_CSV_Files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter_CSV_Files').output.Value",
+						"type": "Expression"
+					},
+					"activities": [
 						{
-							"name": "ForEach_File",
-							"type": "ForEach",
+							"name": "Run_PySpark_Notebook",
+							"type": "SynapseNotebook",
 							"dependsOn": [],
+							"policy": {
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
 							"userProperties": [],
 							"typeProperties": {
-								"items": {
-									"value": "@activity('Get_File_List').output.childItems",
-									"type": "Expression"
+								"notebook": {
+									"referenceName": "csvToSqlPySparkNotebook",
+									"type": "NotebookReference"
 								},
-								"activities": [
-									{
-										"name": "Run_PySpark_Notebook",
-										"type": "SynapseNotebook",
-										"dependsOn": [],
-										"policy": {
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
+								"parameters": {
+									"fileName": {
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
 										},
-										"userProperties": [],
-										"typeProperties": {
-											"notebook": {
-												"referenceName": "csvToSqlPySparkNotebook",
-												"type": "NotebookReference"
-											},
-											"sparkPool": {
-												"referenceName": "SampleSpark",
-												"type": "BigDataPoolReference"
-											},
-											"executorSize": "Small",
-											"conf": {
-												"spark.dynamicAllocation.enabled": true,
-												"spark.dynamicAllocation.minExecutors": null,
-												"spark.dynamicAllocation.maxExecutors": null
-											},
-											"driverSize": "Small",
-											"numExecutors": null,
-											"authentication": {
-												"type": "MSI"
-											}
-										}
+										"type": "Expression"
+									},
+									"stateName": {
+										"value": {
+											"value": "@split(item().name,'-')[0]",
+											"type": "Expression"
+										},
+										"type": "Expression"
+									},
+									"fileDate": {
+										"value": {
+											"value": "@split(split(item().name,'-')[1],'.')[0]",
+											"type": "Expression"
+										},
+										"type": "Expression"
 									}
-								]
+								},
+								"sparkPool": {
+									"referenceName": "SampleSpark",
+									"type": "BigDataPoolReference"
+								},
+								"executorSize": "Small",
+								"conf": {
+									"spark.dynamicAllocation.enabled": true
+								},
+								"driverSize": "Small",
+								"authentication": {
+									"type": "MSI"
+								}
 							}
 						}
 					]
