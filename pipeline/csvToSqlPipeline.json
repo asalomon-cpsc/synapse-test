@@ -34,7 +34,7 @@
 			}
 		],
 		"parameters": {
-			"csvtest": {
+			"fileName": {
 				"type": "String",
 				"defaultValue": "Florida-101012025.csv"
 			}
