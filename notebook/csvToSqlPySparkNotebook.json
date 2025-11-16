@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 1",
+	"name": "csvToSqlPySparkNotebook",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "acb3b417-8b41-4753-8aac-98416c35963d"
+				"spark.autotune.trackingId": "1ee401b3-7b9c-4385-af9a-3ddd72fd9d0f"
 			}
 		},
 		"metadata": {
