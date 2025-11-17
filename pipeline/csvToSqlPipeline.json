@@ -7,6 +7,7 @@
 				"type": "SynapseNotebook",
 				"dependsOn": [],
 				"policy": {
+					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -18,24 +19,30 @@
 						"referenceName": "csvToSqlPySparkNotebook",
 						"type": "NotebookReference"
 					},
+					"parameters": {
+						"fileName": {
+							"value": {
+								"value": "@pipeline().parameters.fileName",
+								"type": "Expression"
+							},
+							"type": "Expression"
+						}
+					},
 					"sparkPool": {
 						"referenceName": "SampleSpark",
 						"type": "BigDataPoolReference"
 					},
 					"executorSize": "Small",
 					"conf": {
-						"spark.dynamicAllocation.enabled": true
+						"spark.dynamicAllocation.enabled": "true"
 					},
-					"driverSize": "Small",
-					"authentication": {
-						"type": "MSI"
-					}
+					"driverSize": "Small"
 				}
 			}
 		],
 		"parameters": {
 			"fileName": {
-				"type": "String",
+				"type": "string",
 				"defaultValue": "Florida-10102025.csv"
 			}
 		},
