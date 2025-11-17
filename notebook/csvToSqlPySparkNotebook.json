@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ee849016-4642-4b40-b45c-2caf4178c7b7"
+				"spark.autotune.trackingId": "095d0d06-77da-4624-9f78-3c6f45f27861"
 			}
 		},
 		"metadata": {
@@ -49,6 +49,17 @@
 			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import os\n",
+					"# === Parameters from pipeline ===\n",
+					"from pyspark.sql import SparkSession\n",
+					"\n",
+					"from notebookutils import mssparkutils"
+				],
+				"execution_count": null
+			},
 			{
 				"cell_type": "code",
 				"source": [
@@ -110,16 +121,24 @@
 					"    df = df.withColumn(col, trim(df[col]))\n",
 					"\n",
 					"# === SQL Server connection ===\n",
-					"jdbc_url = \"jdbc:sqlserver://dths-test-sqlserver.database.windows.net:1433;databaseName=dths;encrypt=true;trustServerCertificate=false;authentication=ActiveDirectoryMsi\"\n",
+					"jdbc_url = \"jdbc:sqlserver://dths-test-sqlserver.database.windows.net:1433;databaseName=dths\"\n",
 					"target_table = \"dbo.batches\"\n",
 					"\n",
+					"# Get token using notebook's Managed Identity (automatic)\n",
+					"token = mssparkutils.credentials.getToken('dw')\n",
+					"\n",
+					"connectionProperties = {\n",
+					"    \"accessToken\": token,\n",
+					"    \"driver\": \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\n",
+					"}\n",
 					"# === Write to SQL Server efficiently ===\n",
 					"(df.write\n",
 					"   .format(\"jdbc\")\n",
 					"   .mode(\"append\")\n",
 					"   .option(\"url\", jdbc_url)\n",
-					"   .option(\"dbtable\", target_table)\n",
+					"   .option(\"dbtable\", \"dbo.batches\")      \n",
 					"   .option(\"batchsize\", 5000)\n",
+					"   .options(**connection_properties)      \n",
 					"   .save())\n",
 					"\n",
 					"print(f\"Data successfully written to {target_table}\")\n",
@@ -148,7 +167,7 @@
 					"database = \"dths\"\n",
 					"table = \"dbo.batches\"\n",
 					"\n",
-					"jdbcUrl = f\"jdbc:sqlserver://{server}:1433;database={database};encrypt=true;trustServerCertificate=false;authentication=ActiveDirectoryMsi\";\n",
+					"jdbcUrl = f\"jdbc:sqlserver://{server}:1433;database={database}\";\n",
 					"\n",
 					"connectionProperties = {\n",
 					"    \"accessToken\": token,\n",
@@ -158,7 +177,7 @@
 					"df = spark.read.jdbc(url=jdbcUrl, table=table, properties=connectionProperties)\n",
 					"df.show()"
 				],
-				"execution_count": 8
+				"execution_count": 9
 			}
 		]
 	}
