@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "34a2254f-efb3-4552-9f0c-416203d8ee75"
+				"spark.autotune.trackingId": "f16bf005-207b-4623-b3b1-e069ef633e8c"
 			}
 		},
 		"metadata": {
@@ -154,7 +154,7 @@
 					"print(f\"Moved file to archive: {archive_path}\")\n",
 					""
 				],
-				"execution_count": 11
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
