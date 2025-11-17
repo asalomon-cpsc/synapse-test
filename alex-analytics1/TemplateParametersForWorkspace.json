@@ -23,6 +23,12 @@
 		"alex-analytics1-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://alexanalytics1.dfs.core.windows.net"
 		},
+		"dthslinkmi_properties_typeProperties_server": {
+			"value": "dths-test-sqlserver.database.windows.net"
+		},
+		"dthslinkmi_properties_typeProperties_database": {
+			"value": "dths"
+		},
 		"Trigger_9wq_properties_CopyStatusToParquet_parameters_windowStart": {
 			"value": "@trigger().scheduledTime"
 		}
