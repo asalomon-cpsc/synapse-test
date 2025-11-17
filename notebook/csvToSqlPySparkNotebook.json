@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f4df280f-19ca-493b-b2fd-0f87537c6f09"
+				"spark.autotune.trackingId": "18048429-1e7d-425c-8cb5-c7a80a096180"
 			}
 		},
 		"metadata": {
@@ -137,7 +137,7 @@
 					"   .option(\"url\", jdbc_url)\n",
 					"   .option(\"dbtable\", \"dbo.batches\")\n",
 					"   .option(\"batchsize\", \"10000\")\n",
-					"   .options(**connection_properties)\n",
+					"   .options(**connectionProperties)\n",
 					"   .save())\n",
 					"\n",
 					"print(f\"Data successfully written to {target_table}\")\n",
@@ -153,7 +153,7 @@
 					"print(f\"Moved file to archive: {archive_path}\")\n",
 					""
 				],
-				"execution_count": 15
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
