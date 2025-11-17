@@ -802,7 +802,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "59e97db5-6d5b-4489-a944-da4d5ff35f5e"
+						"spark.autotune.trackingId": "cb874fc9-03b7-461e-a001-58dc14a39410"
 					}
 				},
 				"metadata": {
@@ -863,7 +863,10 @@
 							"# Python notebook code\n",
 							"\n",
 							"# Get notebook parameter safely\n",
-							"file_name = notebookutils.parameters.get(\"fileName\", \"Florida-10102025.csv\")\n",
+							"# Retrieve the notebook parameter from pipeline\n",
+							"file_name = mssparkutils.notebook.getParameter(\"fileName\", \"Florida-10102025.csv\")\n",
+							"\n",
+							"print(\"file_name =\", file_name)\n",
 							"\n",
 							"print(\"Received file name:\", file_name)\n",
 							"\n",
