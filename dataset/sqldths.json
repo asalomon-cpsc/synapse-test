@@ -1,0 +1,112 @@
+{
+	"name": "sqldths",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dthslinkmi",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "batchId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "state",
+				"type": "varchar"
+			},
+			{
+				"name": "stateFIPS",
+				"type": "char"
+			},
+			{
+				"name": "year",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "dateReceived",
+				"type": "date"
+			},
+			{
+				"name": "dateReady",
+				"type": "date"
+			},
+			{
+				"name": "totalRecords",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "toReview",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "reviewedCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "awaitingCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "dthsCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "abdtCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "rejectedCount",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "batchStatus",
+				"type": "varchar"
+			},
+			{
+				"name": "submittedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "submittedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "createdBy",
+				"type": "varchar"
+			},
+			{
+				"name": "createdDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "modifiedBy",
+				"type": "varchar"
+			},
+			{
+				"name": "modifiedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Batches"
+		}
+	}
+}
