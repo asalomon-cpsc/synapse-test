@@ -1,0 +1,19 @@
+{
+	"name": "dthslinkmi",
+	"properties": {
+		"description": "linked service to dths db with managed identity",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "dths-test-sqlserver.database.windows.net",
+			"database": "dths",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SystemAssignedManagedIdentity"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
