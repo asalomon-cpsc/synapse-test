@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c13e42e3-ccc0-4148-9ffe-a337a7a20749"
+				"spark.autotune.trackingId": "31ade977-07d3-466e-8d71-f469fb20049c"
 			}
 		},
 		"metadata": {
@@ -136,6 +136,29 @@
 					""
 				],
 				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Get token using notebook's Managed Identity (automatic)\n",
+					"token = mssparkutils.credentials.getToken('database.windows.net')\n",
+					"\n",
+					"# JDBC connection to Azure SQL\n",
+					"server = \"dths-test-sqlserver.database.windows.net\"\n",
+					"database = \"dths\"\n",
+					"table = \"dbo.batches\"\n",
+					"\n",
+					"jdbcUrl = f\"jdbc:sqlserver://{server}:1433;database={database};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;\"\n",
+					"\n",
+					"connectionProperties = {\n",
+					"    \"accessToken\": token,\n",
+					"    \"driver\": \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\n",
+					"}\n",
+					"\n",
+					"df = spark.read.jdbc(url=jdbcUrl, table=table, properties=connectionProperties)\n",
+					"df.show()"
+				],
+				"execution_count": null
 			}
 		]
 	}
