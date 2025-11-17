@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f2832aa2-9ef6-4c06-ba6d-00e7b4d197d6"
+				"spark.autotune.trackingId": "5dfbb886-313e-40b3-b6c5-0580883fc501"
 			}
 		},
 		"metadata": {
@@ -51,6 +51,21 @@
 		"cells": [
 			{
 				"cell_type": "code",
+				"metadata": {
+					"tags": [
+						"parameters"
+					]
+				},
+				"source": [
+					"fileName = \"Florida-10102025.csv\""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
 				"source": [
 					"import os\n",
 					"# === Parameters from pipeline ===\n",
@@ -77,7 +92,7 @@
 					"\n",
 					"# Get notebook parameter safely\n",
 					"# Retrieve the notebook parameter from pipeline\n",
-					"file_name = mssparkutils.notebook.getParameter(\"fileName\", \"Florida-10102025.csv\")\n",
+					"file_name = fileName\n",
 					"\n",
 					"print(\"file_name =\", file_name)\n",
 					"\n",
