@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "36b38df9-4840-416b-a70e-501bbdd47644"
+				"spark.autotune.trackingId": "90915a43-ec9c-48d8-88fa-5a0cd63a5aff"
 			}
 		},
 		"metadata": {
@@ -74,7 +74,7 @@
 					"# Manual defaults for testing\n",
 					"# --------------------------\n",
 					"# Python notebook code\n",
-					"file_name = mssparkutils.runtime.context.get('file_name', 'Florida-10102025.csv')\n",
+					"file_name = mssparkutils.runtime.context.get('fileName', 'Florida-10102025.csv')\n",
 					"\n",
 					"# Auto-extract state and date from filename (very common pattern)\n",
 					"state_name = file_name.split('-')[0]          # \"Florida\" → you can map to \"FL\" if needed\n",
