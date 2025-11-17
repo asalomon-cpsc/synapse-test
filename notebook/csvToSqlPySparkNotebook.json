@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a5c0fc3c-d605-4237-a73a-0dacd5835b53"
+				"spark.autotune.trackingId": "f4df280f-19ca-493b-b2fd-0f87537c6f09"
 			}
 		},
 		"metadata": {
@@ -58,7 +58,7 @@
 					"\n",
 					"from notebookutils import mssparkutils"
 				],
-				"execution_count": 10
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -127,13 +127,17 @@
 					"    \"driver\": \"com.microsoft.sqlserver.jdbc.SQLServerDriver\"\n",
 					"}\n",
 					"# === Write to SQL Server efficiently ===\n",
-					"(df.write\n",
+					"# Replace \"BatchID\" since it's the INSERT_IDENTITY column\n",
+					"df_to_write = df.drop(\"BatchID\")\n",
+					"\n",
+					"# Then write\n",
+					"(df_to_write.write\n",
 					"   .format(\"jdbc\")\n",
 					"   .mode(\"append\")\n",
 					"   .option(\"url\", jdbc_url)\n",
-					"   .option(\"dbtable\", \"dbo.batches\")      \n",
-					"   .option(\"batchsize\", 5000)\n",
-					"   .options(**connectionProperties)      \n",
+					"   .option(\"dbtable\", \"dbo.batches\")\n",
+					"   .option(\"batchsize\", \"10000\")\n",
+					"   .options(**connection_properties)\n",
 					"   .save())\n",
 					"\n",
 					"print(f\"Data successfully written to {target_table}\")\n",
@@ -149,7 +153,7 @@
 					"print(f\"Moved file to archive: {archive_path}\")\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -172,7 +176,7 @@
 					"df = spark.read.jdbc(url=jdbcUrl, table=table, properties=connectionProperties)\n",
 					"df.show()"
 				],
-				"execution_count": 9
+				"execution_count": null
 			}
 		]
 	}
