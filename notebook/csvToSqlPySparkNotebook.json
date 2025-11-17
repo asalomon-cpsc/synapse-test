@@ -18,7 +18,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f16bf005-207b-4623-b3b1-e069ef633e8c"
+				"spark.autotune.trackingId": "a5c0fc3c-d605-4237-a73a-0dacd5835b53"
 			}
 		},
 		"metadata": {
@@ -109,12 +109,7 @@
 					"print(\"Read CSV File\")\n",
 					"df.show()\n",
 					"\n",
-					"# === Add metadata columns ===\n",
-					"from pyspark.sql.functions import lit, current_timestamp, trim\n",
-					"df = (df\n",
-					"      .withColumn(\"SourceState\", lit(state_name))\n",
-					"      .withColumn(\"SourceFileDate\", lit(file_date))\n",
-					"      .withColumn(\"IngestionTimestamp\", current_timestamp()))\n",
+					"\n",
 					"\n",
 					"# === Simple transformation: trim all string columns ===\n",
 					"for col in df.columns:\n",
